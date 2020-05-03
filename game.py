@@ -40,15 +40,17 @@ class Board:
         return self.Ai2.getAction(temp)
 
     def gameOver(self):
+        #print("inside gameOver")
         self.isGameOver = True
         wScore = self.gameState.getWhiteScore()
         bScore = self.gameState.getBlackScore()
         if wScore == bScore:
+            self.winner = 0
             #print("tie")
         elif wScore > bScore:
             self.winner = 1
             #print("white wins")
-        elif wScore  < bScore:
+        elif wScore < bScore:
             self.winner = 2
             #print("black wins")
         else: #never gets here
@@ -91,7 +93,7 @@ class Board:
             else:
                 action = self.getMoveFromAI1()
                 if action in actions:
-                    print("this action:", action)
+                    #print("this action:", action)
                     #self.gameState.printGameState()
                     self.gameState = self.gameState.generateSuccessor(self.player,action)
                     #self.drawMatrix(self.gameState.getMatrix())
@@ -214,7 +216,11 @@ class Game:
             self.board = Board(self.win, deepcopy(self.A),self.agent1, self.agent2)
 
 
-
+def runMatch(g):
+    g.guantletNoGraphics(100)
+    g.getPlayer1Wins()
+    g.getPlayer2Wins()
+    g.getTie()
 def main():
     #import sys
     #print(sys.version)
@@ -228,22 +234,68 @@ def main():
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]   ]
+
+    B = [   [1,2,2,2,2,2,2,1], #test matrix
+            [2,2,2,2,2,2,2,2],
+            [2,2,2,2,2,2,2,2],
+            [2,2,2,2,2,2,2,2],
+            [2,2,2,2,2,2,2,2],
+            [2,2,2,2,2,2,2,2],
+            [2,2,2,2,2,2,2,2],
+            [2,2,2,2,2,2,2,1]   ]
     #AI takes a max depth and a player number and a name
+    hardAI = ExpectimaxAI(1,2, "hard")
     rm1 = RandomAI(3,1, "random agent1")
     rm2 = RandomAI(3,2, "random agent2")
     ab1 = AlphaBetaAI(3,1, "alphaB agent1")
-    ab2 = AlphaBetaAI(1,2, "alphaB agent2")
+    ab2 = AlphaBetaAI(3,2, "alphaB agent2")
     em1 = ExpectimaxAI(3,1, "expectiM agent1")
     em2 = ExpectimaxAI(3,2, "expectiM agent2")
     #em = AI(2,3) #AI takes a player number and a max depth
     #b = Board(win, A, ab, rm)
     #d = Board(win,A, ab, rm)
-    g = Game( win, A, rm1, em2)
-    #g.guantlet(2)
-    g.guantletNoGraphics(100)
-    g.getPlayer1Wins()
-    g.getPlayer2Wins()
-    g.getTie()
+
+    """
+    b = Board(win, B)
+    print(b.gameState.isGameOver())
+    b.gameState.evaluationFunction(2)
+
+    """
+    """
+    hum = Board(win, A, hardAI)
+    hum.drawBoard()
+    while(True):
+        hum.playerVsAgent()
+        hum.drawBoard()
+        if hum.isGameOver:
+            break
+
+
+    """
+    #   control
+    c1 = Game(win, A, rm1, rm2)
+    c2 = Game(win, A, ab1, ab2)
+    c3 = Game(win, A, em1, em2)
+
+    # RM vs EM
+    g1 = Game( win, A, rm1, em2)
+    g2 = Game( win, A, em1, rm2)
+
+    #Rm vs AB
+    g3 = Game( win, A, rm1, ab2)
+    g4 = Game( win, A, ab1, rm2)
+
+    #AB vs EM
+    g5 = Game( win, A, ab1, em2)
+    g6 = Game( win, A, em1, ab2)
+
+
+    runMatch(g1)
+    runMatch(g2)
+
+
+
+
     win.close()
 
 

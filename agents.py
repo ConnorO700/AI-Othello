@@ -5,6 +5,7 @@ class AI:
     def __init__(self, maxDepth, playerNum, name):
         self.sleeper = 0 #sleep time between ai moves
         self.player = playerNum
+        self.other = (playerNum % 2) + 1
         self.depth = maxDepth
         self.name = name
 
@@ -48,10 +49,9 @@ class AlphaBetaAI(AI):
             if currDepth == self.depth:			#max depth reached
                 return gameState.evaluationFunction(self.player)
             value = float("-inf")
-            player = self.player	#I could use isPlayer here but I use player instead to make code more readable
-            possibleActions = gameState.getLegalActions(self.player)
+            possibleActions = gameState.getLegalActions(isPlayer)
             for actionIndex in range(0,len(possibleActions)):
-                potentialState = gameState.generateSuccessor(self.player, possibleActions[actionIndex])
+                potentialState = gameState.generateSuccessor(isPlayer, possibleActions[actionIndex])
                 value = max(value, self.alphaBeta(potentialState, currDepth, isPlayer, alpha, beta ))
                 alpha = max(alpha, value)
                 if alpha > beta:
@@ -99,11 +99,12 @@ class ExpectimaxAI(AI):
         if player == self.player: #max function
             currDepth = currDepth + 1
             if currDepth == self.depth:			#max depth reached
+                #print("depth reached??")
                 return gameState.evaluationFunction(self.player)
             highValue = float("-inf")
-            possibleActions = gameState.getLegalActions(self.player)
+            possibleActions = gameState.getLegalActions(player)
             for actionIndex in range(0,len(possibleActions)):
-                potentialState = gameState.generateSuccessor(self.player, possibleActions[actionIndex])
+                potentialState = gameState.generateSuccessor(player, possibleActions[actionIndex])
                 highValue = max(highValue,  self.expectimax(potentialState, currDepth, player))
             return highValue
         else: #expectation function
