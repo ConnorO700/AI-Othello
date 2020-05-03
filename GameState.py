@@ -39,12 +39,18 @@ class GameState:
     def getBlackScore(self):
         return self.blackScore
 
-
+    def winning(self, color):
+        if color == 1:
+            return (self.whiteScore > self.blackScore)
+        elif color == 2:
+            return (self.blackScore > self.whiteScore)
+        else:
+            return False
 
     def isGameOver(self):
         white = self.getLegalActions(1)
         black = self.getLegalActions(2)
-        if white == None or black == None:
+        if white == [] or black == []:
             return True
         else:
             return False
@@ -170,7 +176,7 @@ class GameState:
     @param max int  the max index for row and or col in a square matrix
     @param x, y tile position in the given state
 
-    @return value of that tile based off color and position; black = min white =max
+    @return value of that tile based off color and position;
     """
     def evaluateTile(self,tile, max, x, y, color):
         if tile == 0:
@@ -208,4 +214,12 @@ class GameState:
         for x in range(0,max):
             for y in range(0, max):
                 score = score + self.evaluateTile(self.A[x][y], max-1, x, y, color)
+        enemy = (color % 2) + 1
+        if self.isGameOver() and (self.winning(color)):
+            #print("???")
+            score = score + 500 #significantly higher score for a winning state
+        if self.isGameOver() and (self.winning(enemy)):
+            #print("?????")
+            score = score - 1000 #significantly lower score for a losing state
+        #print(color, " eval : ", score)
         return score

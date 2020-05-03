@@ -2,6 +2,9 @@ Othello-AI
 
 Change LOG
 ---------------------
+Version 1.0.4 date created 05/03/2020
+Fixed some issues with evalFunc
+
 Version 1.0.3 date created 05/03/2020
 added in random, AlphaBeta and expectimax agent
 increased game modularization
